@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <center>
+        <h1>JQuery</h1>
+        <label for="token">Token: </label>
+        <input type="text" id="token"><br>
+        <button id="btn">Clicca</button>
+        <p id="text"></p>
+
+        <table>
+            <thead>
+                <th>Da</th>
+                <th>A</th>
+                <th>Data</th>
+            </thead>
+            <tbody id="tbl">
+
+            </tbody>
+        </table>
+    </center>
+</body>
+
+<script>
+    $(document).ready(function() {
+        $("#btn").click(function() {
+            $.ajax({
+                url: "http://localhost:8080/trenitalia/getViaggi/" + $("#token").val(),
+                dataType: "json",
+                type: "get",
+                success: function(response) {
+                    var json = JSON.parse(JSON.stringify(response));
+                    console.log(json);
+                    $("#text").text(json.message[0].token);
+
+
+                    var s = "";
+                    for (let i = 1; i < json.message.length; i++) {
+                        s += "<tr><td>" + json.message[i].da + "</td><td>" + json.message[i].a + "</td><td>" + json.message[i].data + "</td></tr>";
+                    }
+                    $("#tbl").html(s);
+                },
+                error: function(jqXHR, status, errorThrown) {
+                    $("#text").text(errorThrown);
+                }
+            })
+        });
+
+    });
+</script>
+
+</html>
